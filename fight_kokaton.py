@@ -142,7 +142,7 @@ class Beam:
         self.img = pg.transform.rotozoom(self.img, math.degrees(theta), 1.0)
 
         # こうかとんのrctのwidthとheightおよび向いている方向を考慮した初期配置
-        self.rct.centerx = bird.rct.centerx+48*self.vx/5
+        self.rct.centerx = bird.rct.centerx+48*self.vx/5+100
         self.rct.centery = bird.rct.centery+48*self.vy/5
     
     def update(self, screen: pg.Surface):
