@@ -9,7 +9,6 @@ WIDTH = 1600  # ゲームウィンドウの幅
 HEIGHT = 900  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5
 
-
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
     """
     オブジェクトが画面内or画面外を判定し,真理値タプルを返す関数
@@ -140,6 +139,20 @@ class Beam:
         screen.blit(self.img, self.rct)
 
 
+class Score:
+    def __init__(self):
+        self.font=pg.font.SysFont("hgp創英角ﾎﾟｯﾌﾟ体", 30)
+        self.color=(0,0,255)
+        self.scr=0
+        self.img=self.font.render(f"SCORE:{self.scr}", 0, self.color)
+        self.img_rct=self.img.get_rect()
+        self.img_plc=100,850
+
+    def update(self,screen):
+        self.img=self.font.render(f"SCORE:{self.scr}", 0, self.color)
+        screen.blit(self.img, self.img_plc)
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -148,7 +161,7 @@ def main():
     # bomb = Bomb((255, 0, 0), 10)
     bombs=[Bomb((255,0,0),10) for _ in range(NUM_OF_BOMBS)]
     beam = None  #一旦ビームにNoneを代入
-
+    score=Score()
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -175,6 +188,7 @@ def main():
                     bombs[i] = None
                     beam = None
                     bird.change_img(6, screen)  #喜ぶ画像に切り替え
+                    score.scr+=1
                     pg.display.update()
 
         key_lst = pg.key.get_pressed()
@@ -184,6 +198,7 @@ def main():
             bomb.update(screen)
         if beam is not None:  #ビームがNoneじゃなかったら＝ビームにBeamクラスが代入されたら
             beam.update(screen)
+        score.update(screen)
         pg.display.update()
         tmr += 1
         clock.tick(50)
