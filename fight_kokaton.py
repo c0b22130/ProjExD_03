@@ -8,7 +8,7 @@ import pygame as pg
 WIDTH = 1600  # ゲームウィンドウの幅
 HEIGHT = 900  # ゲームウィンドウの高さ
 NUM_OF_BOMBS = 5
-
+bm_place = 0,0
 
 def check_bound(obj_rct: pg.Rect) -> tuple[bool, bool]:
     """
@@ -140,6 +140,22 @@ class Beam:
         screen.blit(self.img, self.rct)
 
 
+class Explosion:
+    def __init__(self):
+        self.exp = pg.image.load("ex03/fig/explosion.gif")
+        self.exp1 = pg.transform.flip(self.exp, False, False)
+        self.exp2 = pg.transform.flip(self.exp, True, False)
+        self.exp3 = pg.transform.flip(self.exp, False, True)
+        self.exp4 = pg.transform.flip(self.exp, True, True)
+        self.exps=[self.exp1,self.exp2,self.exp3,self.exp4]
+        self.rct = self.exp.get_rect()
+        self.rct.center = bm_place
+        self.life = 0
+
+    def update(self):
+        self.life-=1
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))    
@@ -172,6 +188,7 @@ def main():
         for i,bomb in enumerate(bombs):
             if beam is not None:
                 if bomb.rct.colliderect(beam.rct):  #爆弾とビームが衝突したら
+                    bm_place=bomb.rct.center
                     bombs[i] = None
                     beam = None
                     bird.change_img(6, screen)  #喜ぶ画像に切り替え
